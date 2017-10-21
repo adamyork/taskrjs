@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="Demo project">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                font: 80%/1.45em "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+                margin: 0;
+                padding: 0;
+                color: #333;
+                background-color: #fff;
+            }
+
+            #headersDiv {
+                width: 800px;
+                margin: 30px auto;
+                margin-bottom: 0;
+                text-align: center;
+                background-color: #bbb;
+                padding: 0;
+            }
+
+            #tasksDiv {
+                width: 800px;
+                height: 400px;
+                max-height: 400px;
+                margin: 30px auto;
+                margin-top: 0;
+                margin-bottom: 0;
+                text-align: center;
+                background-color: #bbb;
+                padding: 0;
+                overflow: auto;
+            }
+
+            #removeDiv {
+                width: 800px;
+                margin: 30px auto;
+                margin-top: 0;
+                text-align: center;
+                background-color: #bbb;
+                padding: 0;
+            }
+
+            table {
+                margin: 0 auto;
+                width: 100%;
+                border-spacing: 0;
+            }
+
+            table caption {
+                font-weight: bold;
+            }
+
+            table thead th {
+                border-bottom: 1px solid black;
+                font-weight: bold;
+                width: 350px;
+            }
+
+            table thead th.remove {
+                width: 0;
+            }
+
+            table td {
+                text-align: left;
+                padding: 3px 10px;
+                width: 350px;
+            }
+
+            #removeDiv table td {
+                text-align: right;
+            }
+
+            table tr:nth-child(even) {
+                background-color: #ddffdd;
+            }
+
+            table tr:nth-child(odd) {
+                background-color: #eeffee;
+            }
+
+            table tr:nth-child(even) input[type="text"], textarea {
+                border: none;
+                background-color : #ddffdd; 
+            }
+
+            table tr:nth-child(odd) input[type="text"], textarea {
+                border: none;
+                background-color : #eeffee; 
+            }
+        </style>
+        <title>taskrjs</title>
+    </head>
+    <body>
+        <div id="headersDiv">
+            <table id="headers">
+                <caption>taskr</caption>
+                <thead>
+                    <tr>
+                        <th class="type">Type</th>
+                        <th class="task">Task</th>
+                    </tr>
+                </thead>
+                <tbody/>
+            </table>
+        </div>
+        <div id="tasksDiv">
+            <table id="tasks">
+                <tbody/>
+            </table>
+        </div>
+        <div id="removeDiv">
+            <table id="remove">
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><button type="button" id="add">+</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script type="text/javascript">
+            /*!
+             * taskrjs
+             * Copyright(c) 2011 Adam York
+             * MIT Licensed
+             */
+
+            'use strict';
+
+            document.addEventListener('DOMContentLoaded', () => {
+                let hash = window.location.hash;
+                let taskData = hash.slice(1, hash.length);
+                var tasks = [];
+                if (taskData) {
+                    let decoded = window.atob(taskData);
+                    tasks = JSON.parse(decoded);
+                    tasks.forEach((task, i) => {
+                        task.index = i;
+                        addItem(task);
+                    });
+                }
+
+                let addButton = document.getElementById('add');
+                addButton.addEventListener('click', () => {
+                    addItem();
+                });
+
+                function addItem(existing) {
+                    var task = existing;
+                    if (!task) {
+                        task = {};
+                        task.type = 'Task Type';
+                        task.value = 'Task Contents';
+                    }
+                    let table = document.getElementById('tasks');
+                    let tableBody = table.getElementsByTagName('tbody').item(0);
+                    let row = document.createElement('tr');
+                    let type = document.createElement('td');
+
+                    let typeText = document.createElement('input');
+                    typeText.setAttribute('type', 'text');
+                    typeText.setAttribute('value', task.type);
+                    typeText.addEventListener('input', (e) => {
+                        task.type = e.target.value;
+                        update();
+                    });
+                    type.appendChild(typeText);
+
+                    let value = document.createElement('td');
+                    let valueText = document.createElement('input');
+                    valueText.setAttribute('type', 'text');
+                    valueText.setAttribute('value', task.value);
+                    valueText.addEventListener('input', (e) => {
+                        task.value = e.target.value;
+                        update();
+                    });
+                    value.appendChild(valueText);
+
+                    let remove = document.createElement('button');
+                    remove.innerHTML = '-';
+                    remove.addEventListener('click', () => {
+                        tableBody.removeChild(remove.parentNode);
+                        tasks.splice(task.index, 1);
+                        update();
+                    });
+
+                    row.appendChild(type);
+                    row.appendChild(value);
+                    row.appendChild(remove);
+                    tableBody.appendChild(row);
+
+                    if (!existing) {
+                        task.index = tasks.length;
+                        tasks.push(task);
+                    }
+                    update();
+                }
+
+                function update() {
+                    let output = JSON.stringify(tasks);
+                    let encoded = window.btoa(output);
+                    window.location.hash = encoded;
+                }
+            });
+        </script>
+    </body>
+</html>
