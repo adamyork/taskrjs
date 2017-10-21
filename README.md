@@ -17,4 +17,4 @@ one hundred percent self contained task app.
 
 ## Context
 
-This code was originally created on August 30th, 201l. It sat idle in my workspace for over seven years until I decided to dust it off and finish it. There is really no good reason to use this, other than for the novelty of it, as there are many, far superior task/efficiency applications these days.
+This code was originally created on August 30th, 2011. It sat idle in my workspace for over seven years until I decided to dust it off and finish it. There is really no good reason to use this, other than for the novelty of it, as there are many, far superior task/efficiency applications these days.
