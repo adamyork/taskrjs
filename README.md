@@ -14,3 +14,7 @@ one hundred percent self contained task app.
 - the source file contains no additional libraries , css, or other downloads.
 - the source file contains minimal javascript and basic css
 - local storage is not used. so enabling cookies is not necessary
+
+## Context
+
+This code was originally created on August 30th, 201l. It sat idle in my workspace for over seven years until I decided to dust it off and finish it. There is really no good reason to use this, other than for the novelty of it, as there are many, far superior task/efficiency applications these days.
